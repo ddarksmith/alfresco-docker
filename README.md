@@ -1,6 +1,6 @@
-# Docker Composition for Alfresco CE 201707-GA
+# Docker Composition for Alfresco 5.2 stack
 
-Sample Docker Composition for integration testing with Alfresco 5.2
+Docker Composition for integration with Alfresco 5.2
 
 **Docker** & **Docker Compose** software is required to use this project.
 You should review volumes, configuration, modules & tuning parameters before using this composition in **Production** environments.
@@ -8,17 +8,47 @@ You should review volumes, configuration, modules & tuning parameters before usi
 ## Starting
 
 Download or clone this repository.
-
-Create the volumes structure
-
+```
+$ git clone https://github.com/ddarksmith/alfresco-docker.git
 ```
 
+You can copy the volumes folder structure where you want, mount drives if you need
+
+```
+├── backup                           (this is where bart will put the full and incremental backup. eg. NAS NFSmount)
+├── config
+│   ├── bart                         (backup software configuration)
+│   ├── elk                          (elk monitoring configuration)
+│   ├── ext-auth                     (alfresco with kerberos configuration)
+│   ├── nagios                       (nagios monitoring configuration)
+│   ├── SSL                          (ssl certificate sample cert)
+│   │   └──createssl.sh              (ssl certificate generator)
+│   ├── alfresco-global.properties   (alfresco repository configuration file)
+│   ├── custom.log4j.properties      (alfresco repository logger configuration)
+│   ├── share-config-custom.xml      (alfresco share configuration file)
+│   └── users.htpasswd               (user/password for protected admin area solr/nagios/kibana)
+├── data                             
+│   ├── alf-repo-data                (alfresco repository content store. known as alf_data)
+│   ├── els-data                     (elasticsearch indexes for elk monitoring. eg. audit data, performance data...)
+│   ├── postgres-data                (postgresql data contain the alfresco repository database)
+│   └── solr-data                    (solr indexes Consider mount it on SSD drive)
+└── logs
+    ├── alfresco                     (link to the alfresco repository logfile folder)
+    ├── bart                         (link to the bart logs)
+    ├── elk                          (link to ELK logs)
+    ├── postgres                     (link to postgresql logs)
+    ├── proxy                        (link to httpd reverse proxy logs)
+    └── share                        (link to alfresco share logs)
+```
+
+For the example I've put the whole Volumes structure on /volumes
+```
+$ cp -R ./volumes /
 ```
 
 Give the persistent volumes permissions
 
 ```
-$ mkdir -p /volumes/config /volumes/data/alf-repo-data /volumes/data/postgres-data /volumes/data/solr-data /volumes/logs/alfresco /volumes/logs/postgres /volumes/logs/share
 $ chown 1000:1000 -R /volumes
 $ chmod -R 664 /volumes
 ```
@@ -31,11 +61,6 @@ $ chown postgres:postgres /volumes/data/postgres-data
 
 ```
 
-Copy config to persistent volume
-
-```
-$ cp -R ./config/* /volumes/config/
-```
 
 If you have ssl certificate for your company put it in /volumes/config/ssl and configure nginx-ssl.conf with it's correct name in those lines
 
