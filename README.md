@@ -12,10 +12,11 @@ Download or clone this repository.
 $ git clone https://github.com/ddarksmith/alfresco-docker.git
 ```
 
-You can copy the volumes folder structure where you want, mount drives if you need
+Persistent data folders path can be changed by modifying local paths set in `volumes` directives at `docker-compose.yml` to global paths
 
 ```
-├── backup                           (this is where bart will put the full and incremental backup. eg. NAS NFSmount)
+volumes
+├── backup                           (this is where bart will put the full and incremental backup.)
 ├── config
 │   ├── bart                         (backup software configuration)
 │   ├── elk                          (elk monitoring configuration)
@@ -29,9 +30,9 @@ You can copy the volumes folder structure where you want, mount drives if you ne
 │   └── users.htpasswd               (user/password for protected admin area solr/nagios/kibana)
 ├── data                             
 │   ├── alf-repo-data                (alfresco repository content store. known as alf_data)
-│   ├── els-data                     (elasticsearch indexes for elk monitoring. eg. audit data, performance data...)
+│   ├── els-data                     (elasticsearch indexes for elk monitoring. eg. audit, performance...)
 │   ├── postgres-data                (postgresql data contain the alfresco repository database)
-│   └── solr-data                    (solr indexes Consider mount it on SSD drive)
+│   └── solr-data                    (solr indexes. Consider mount it on SSD drive)
 └── logs
     ├── alfresco                     (link to the alfresco repository logfile folder)
     ├── bart                         (link to the bart logs)
@@ -41,39 +42,42 @@ You can copy the volumes folder structure where you want, mount drives if you ne
     └── share                        (link to alfresco share logs)
 ```
 
-For the example I've put the whole Volumes structure on /volumes
+For the example I've put the whole Volumes structure in /volumes
 ```
 $ cp -R ./volumes /
 ```
 
 Give the persistent volumes permissions
-
 ```
 $ chown 1000:1000 -R /volumes
 $ chmod -R 664 /volumes
 ```
 
-The postgres-data folder need to be own by a postgres user with the uid 999 on your host
-
+The postgres-data folder need to be own by postgres user with the uid 999 on your host
 ```
 $ useradd -u 999 -g 999 postgres
 $ chown postgres:postgres /volumes/data/postgres-data
 
 ```
 
-
-If you have ssl certificate for your company put it in /volumes/config/ssl and configure nginx-ssl.conf with it's correct name in those lines
+The elasticsearch folder need to be own by elasticsearch user with the uid 991 on your host
+```
+$ useradd -u 991 elasticsearch
+$ chown postgres /volumes/data/postgres-data
 
 ```
- ssl_certificate     /etc/nginx/conf.d/ssl/alfresco.crt;
- ssl_certificate_key /etc/nginx/conf.d/ssl/alfresco.key;
+
+If you have ssl certificate for your company put it in /volumes/config/ssl and configure alfresco-vhost.conf with it's correct name in those lines
+```
+    SSLCertificateFile /etc/pki/tls/certs/alfresco.crt
+    SSLCertificateKeyFile /etc/pki/tls/certs/alfresco.key
 ```
 
-If you prefer to generate a self-signed one executer the sslcreate.sh script and follow the instructions
+If you prefer to generate a self-signed one execute the sslcreate.sh script and follow the instructions
 
 
 
-From root directory, start Docker Compose.
+From the base directory, start Docker Compose.
 
 ```
 $ docker-compose up
@@ -82,45 +86,25 @@ $ docker-compose up
 Once all the containers have been started, a message similar to following one will appear.
 
 ```
-alfresco_1     | May 15, 2018 11:03:22 AM org.apache.catalina.startup.Catalina start
-alfresco_1     | INFO: Server startup in 70314 ms
+alfresco     | Nov 15, 2018 11:03:22 AM org.apache.catalina.startup.Catalina start
+alfresco     | INFO: Server startup in 70314 ms
 ```
-
-## Volumes
-
-A directory named `volumes` is located in the root folder to store configuration, data and log files.
-
-```bash
-$ tree volumes
-volumes
-├── config
-│   ├── SSL
-│   │   └──createssl.sh 
-│   ├── alfresco-global.properties
-│   ├── share-config-custom.xml
-├── data
-│   ├── alf-repo-data
-│   ├── postgres-data
-│   └── solr-data
-└── logs
-    ├── alfresco
-    ├── postgres
-    └── share
-```
-
-
-Persistent data folders path can be changed by modifying local paths set in `volumes` directives at `docker-compose.yml` to global paths
 
 
 ## Available services
 
 Once the composition is up, you can check available services:
 
-* Alfresco Repository - http://localhost/alfresco
-* Alfresco Share Web App - http://localhost/share
-* Alfresco ADF Web App - http://localhost/adf
-* SOLR Indexer - http://localhost/solr
-* Swagger REST API Doc - http://localhost/api-explorer
+* Alfresco Repository    - https://alfresco.companyname.com/alfresco
+* Alfresco Share Web App - https://alfresco.companyname.com/share
+* Alfresco ADF Web App   - https://alfresco.companyname.com/adf
+* SOLR Indexer           - https://alfresco.companyname.com/solr
+* Swagger REST API Doc   - https://alfresco.companyname.com/api-explorer
+* NAGIOS Monitoring      - https://alfresco.companyname.com/nagios
+* ELK Monitoring         - http://alfresco.companyname.com:5601
+* Postgresql             - Exposed on port 5432
+* Bart                   
+
 ## Operations
 
 Following operations are available to customize your Docker Composition.
@@ -201,3 +185,11 @@ volumes
 
 After this operation all the changes in your data will be lost!
 
+Many thanks to
+- Angel Borroy      - The bases of this alfresco docker
+- Cesar Capillas    - NAGIOS Monitoring
+- Miguel Rodriguez  - Alfresco ELK Monitoring
+- Toni de la Fuente - Alfresco BART
+- All the plugins developers
+- The OOTB
+- The whole alfresco team for their job
