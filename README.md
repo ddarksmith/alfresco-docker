@@ -164,7 +164,7 @@ $ docker-compose logs -f alfresco
 In order to remove working data, you can empty the 3 data persistent folders.
 
 volumes
-└── data                             
+└── data
     ├── alf-repo-data           
     ├── els-data                    
     ├── postgres-data                
