@@ -101,16 +101,17 @@ alfresco     | INFO: Server startup in 70314 ms
 
 Once the composition is up, you can check available services:
 
-Services :               Links                                             Container Name
-* Alfresco Repository    - https://alfresco.companyname.com/alfresco       - alfresco 
-* Alfresco Share Web App - https://alfresco.companyname.com/share          - share
-* Alfresco ADF Web App   - https://alfresco.companyname.com/adf            - content-app
-* SOLR Indexer           - https://alfresco.companyname.com/solr           - solr
-* Swagger REST API Doc   - https://alfresco.companyname.com/api-explorer   
-* NAGIOS Monitoring      - https://alfresco.companyname.com/nagios         - nagios
-* ELK Monitoring         - http://alfresco.companyname.com:5601            - elk
-* Postgresql             - Exposed on port 5432                            - db
-* Bart                                                                     - bart
+|   Services            |    Links                                        |  Container Name |
+|-----------------------|-------------------------------------------------|-----------------|
+| Alfresco Repository   | - https://alfresco.companyname.com/alfresco     |  - alfresco     |
+| Alfresco Share Web App| - https://alfresco.companyname.com/share        |  - share        |
+| Alfresco ADF Web App  | - https://alfresco.companyname.com/adf          |  - content-app  |
+| SOLR Indexer          | - https://alfresco.companyname.com/solr         |  - solr         |
+| Swagger REST API Doc  | - https://alfresco.companyname.com/api-explorer |                 |
+| NAGIOS Monitoring     | - https://alfresco.companyname.com/nagios       |  - nagios       |
+| ELK Monitoring        | - http://alfresco.companyname.com:5601          |  - elk          |
+| Postgresql            | - Exposed on port 5432                          |  - db           |
+| Bart                  |                                                 |  - bart         |
 
 ## Customizations
 
