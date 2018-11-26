@@ -55,7 +55,8 @@ $ chmod -R 664 /volumes
 
 The postgres-data folder need to be own by postgres user with the uid 999 on your host
 ```
-$ useradd -u 999 -g 999 postgres
+$ groupadd -g 999 postgres
+$ useradd -u 999 postgres
 $ chown postgres:postgres /volumes/data/postgres-data
 
 ```
@@ -95,17 +96,18 @@ alfresco     | INFO: Server startup in 70314 ms
 
 Once the composition is up, you can check available services:
 
-* Alfresco Repository    - https://alfresco.companyname.com/alfresco
-* Alfresco Share Web App - https://alfresco.companyname.com/share
-* Alfresco ADF Web App   - https://alfresco.companyname.com/adf
-* SOLR Indexer           - https://alfresco.companyname.com/solr
-* Swagger REST API Doc   - https://alfresco.companyname.com/api-explorer
-* NAGIOS Monitoring      - https://alfresco.companyname.com/nagios
-* ELK Monitoring         - http://alfresco.companyname.com:5601
-* Postgresql             - Exposed on port 5432
-* Bart                   
+Services :               Links                                             Container Name
+* Alfresco Repository    - https://alfresco.companyname.com/alfresco       - alfresco 
+* Alfresco Share Web App - https://alfresco.companyname.com/share          - share
+* Alfresco ADF Web App   - https://alfresco.companyname.com/adf            - content-app
+* SOLR Indexer           - https://alfresco.companyname.com/solr           - solr
+* Swagger REST API Doc   - https://alfresco.companyname.com/api-explorer   
+* NAGIOS Monitoring      - https://alfresco.companyname.com/nagios         - nagios
+* ELK Monitoring         - http://alfresco.companyname.com:5601            - elk
+* Postgresql             - Exposed on port 5432                            - db
+* Bart                                                                     - bart
 
-## Operations
+## Customizations
 
 Following operations are available to customize your Docker Composition.
 
@@ -114,12 +116,12 @@ Following operations are available to customize your Docker Composition.
 Copy your artifacts (AMP or JAR) to deployment folders:
 
 * Alfresco Repository
-  * `alfresco/assets/amps`
-  * `alfresco/assets/jars`
+  * `alfresco-repo/assets/amps`
+  * `alfresco-repo/assets/jars`
 
 * Share Web App
-  * `share/assets/amps_share`
-  * `share/assets/jars`
+  * `alfresco-share/assets/amps_share`
+  * `alfresco-share/assets/jars`
 
 
 **Configuration**
@@ -128,48 +130,26 @@ Modify configuration files:
 
 * Alfresco Repository
   * `volumes/config/alfresco-global.properties`
-
+  * `volumes/config/custom-log4j.properties`
+  
 * Share Web App
   * `volumes/config/share-config-custom.xml`
 
 
-**ADF**
-
-You must add a configuration parameter `--base-href` in your local `package.json` in order to produce an ADF application able to attend `/adf` context path
-
-```
-"build": "npm run server-versions && ng build --prod --base-href /adf/",
-```
-
-Copy your generated application replacing the content of `adf/assets/app` folder.
-
-
 ## Applying operations
-
-Docker Compose shall be stopped before applying changes.
-
-```bash
-$ docker-compose down
-```
 
 In order to apply any operation, you need to rebuild Docker image before starting the composition again.
 
 ```bash
-$ docker-compose build alfresco
-$ docker-compose build share
-$ docker-compose build adf
+$ docker-compose up -d --no-deps --build alfresco
 ```
-
-Once the image has been rebuilt, Docker Compose can be started again.
-
-```
-$ docker-compose start
-```
+You can rebuild any of he single container while the stack is running 
+(alfresco-repo and db will make alfresco share to give a maintenance mode message while the container are restarting)
 
 You can check the logs with this command
 
 ```
-$ docker-compose logs -f
+$ docker-compose logs -f alfresco
 ```
 
 
@@ -178,18 +158,24 @@ $ docker-compose logs -f
 In order to remove working data, you can empty the 3 data persistent folders.
 
 volumes
-└── data
-    ├── alf-repo-data
-    ├── postgres-data
+└── data                             
+    ├── alf-repo-data           
+    ├── els-data                    
+    ├── postgres-data                
     └── solr-data
+    
+After this operation all your data will be lost !
 
-After this operation all the changes in your data will be lost!
-
-Many thanks to
-- Angel Borroy      - The bases of this alfresco docker
-- Cesar Capillas    - NAGIOS Monitoring
-- Miguel Rodriguez  - Alfresco ELK Monitoring
-- Toni de la Fuente - Alfresco BART
-- All the plugins developers
-- The OOTB
-- The whole alfresco team for their job
+## TODO
+- Make a cleanup script for the data volumes
+- Make a cleanup script for the elastic search indexes to keep only for a certain amount of time
+- Make script to cronjob the bart backup
+- Test bart script (verify it backup the volumes/config folder)
+- Test the cleanup of the audit log in alfresco database
+- Postgres folder permissions (perhaps 999:1000 works or put 1000 user in postgres group...)
+- Add New bart version supporting for one file restore with postgresql (as soon as it is released) 
+- Logrotate and clean logfiles
+- Add check on elk startup for the dashboard data being present in els-data
+- Make content-app work on /adf with the latest version
+- Add "Edit with microsoft Office" button in content-app
+- Thanks the author
