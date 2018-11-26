@@ -2,6 +2,8 @@
 
 Docker Composition for integration with Alfresco 5.2
 
+  <p align="left"> <img title="Alfresco" src="https://raw.githubusercontent.com/Alfresco/alfresco-content-app/master/alfresco.png" alt="Alfresco - make business flow"></p>
+
 **Docker** & **Docker Compose** software is required to use this project.
 You should review volumes, configuration, modules & tuning parameters before using this composition in **Production** environments.
 
