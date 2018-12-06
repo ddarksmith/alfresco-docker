@@ -69,7 +69,15 @@ $ chown postgres:postgres /volumes/data/postgres-data
 The elasticsearch folder need to be own by elasticsearch user with the uid 991 on your host
 ```
 $ useradd -u 991 elasticsearch
-$ chown postgres /volumes/data/postgres-data
+$ chown elasticsearch /volumes/data/postgres-data
+
+```
+
+The redis log folder need to be own by redi user with the uid 107 on your host. 
+(Beware, on some system user uid 107 is 'messagebus' You can just chown to this user in that specific case)
+```
+$ useradd -u 107 redis
+$ chown redis /volumes/logs/elk/redis
 
 ```
 
@@ -173,7 +181,7 @@ After this operation all your data will be lost !
 
 ## TODO
 - Make a cleanup script for the data volumes
-- Make a cleanup script for the elastic search indexes to keep only for a certain amount of time
+- Make a cleanup script for the elastic search indexes to keep only for a certain amount of time (curator)
 - Make script to cronjob the bart backup
 - Test bart script (verify it backup the volumes/config folder)
 - Test the cleanup of the audit log in alfresco database
