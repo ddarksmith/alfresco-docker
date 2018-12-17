@@ -191,6 +191,7 @@ After this operation all your data will be lost !
 - Add check on elk startup for the dashboard data being present in els-data
 - Make content-app work on /adf with the latest version
 - Add "Edit with microsoft Office" button in content-app
+- Encode passwords in config files
 - Make a script for configuration and deployment (volume paths, url, monitoring or not, ldap/kerberos configuration,etc...)
 - Port the configuration file in helm charts format
 - Thanks the author
