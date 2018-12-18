@@ -69,17 +69,17 @@ $ chown postgres:postgres /volumes/data/postgres-data
 The elasticsearch folder need to be own by elasticsearch user with the uid 991 on your host
 ```
 $ useradd -u 991 elasticsearch
-$ chown elasticsearch /volumes/data/postgres-data
+$ chown elasticsearch /volumes/data/els-data
 
 ```
 
-The redis log folder need to be own by redi user with the uid 107 on your host. 
-(Beware, on some system user uid 107 is 'messagebus' You can just chown to this user in that specific case)
+The elacticsearch log folder need to be owned by logstash user with the id 991 on your host
 ```
-$ useradd -u 107 redis
-$ chown redis /volumes/logs/elk/redis
+$ useradd -u 992 logstash
+$ chown logstash /volumes/logs/elk/logstash
 
 ```
+
 
 If you have ssl certificate for your company put it in /volumes/config/ssl and configure alfresco-vhost.conf with it's correct name in those lines
 ```
@@ -115,7 +115,7 @@ Once the composition is up, you can check available services:
 | Alfresco Share Web App| - https://alfresco.companyname.com/share        |  - share        |
 | Alfresco ADF Web App  | - https://alfresco.companyname.com/adf          |  - content-app  |
 | SOLR Indexer          | - https://alfresco.companyname.com/solr         |  - solr         |
-| Swagger REST API Doc  | - https://alfresco.companyname.com/api-explorer |                 |
+| Swagger REST API Doc  | - https://alfresco.companyname.com/api-explorer |  - alfresco               |
 | NAGIOS Monitoring     | - https://alfresco.companyname.com/nagios       |  - nagios       |
 | ELK Monitoring        | - http://alfresco.companyname.com:5601          |  - elk          |
 | Postgresql            | - Exposed on port 5432                          |  - db           |
@@ -183,6 +183,7 @@ After this operation all your data will be lost !
 - Make a cleanup script for the data volumes
 - Make a cleanup script for the elastic search indexes to keep only for a certain amount of time (curator)
 - Make script to cronjob the bart backup
+- Make a script that test and create the needed user and then set the permissions on it
 - Test bart script (verify it backup the volumes/config folder)
 - Test the cleanup of the audit log in alfresco database
 - Postgres folder permissions (perhaps 999:1000 works or put 1000 user in postgres group...)
