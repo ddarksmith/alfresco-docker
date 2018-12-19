@@ -1,7 +1,7 @@
 FROM ubuntu:xenial
-LABEL maintainer "mikel.asla@keensoft.es"
+LABEL maintainer "frederic.zeller@arcentis.ch"
 LABEL version "1.0"
-LABEL description "This is alfresco-docker-template version 201707-GA" 
+LABEL description "This is libreoffice container for alfresco" 
 
 ENV DEBIAN_FRONTEND noninteractive
 
