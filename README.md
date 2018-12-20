@@ -172,10 +172,10 @@ $ docker-compose logs -f alfresco
 In order to remove working data, you can empty the 3 data persistent folders.
 
 ├── data                             
-    ├── alf-repo-data                
-    ├── els-data                    
-    ├── postgres-data              
-    └── solr-data                   
+    ├─── alf-repo-data                
+    ├─── els-data                    
+    ├─── postgres-data              
+    └─── solr-data                   
     
 After this operation all your data will be lost !
 
@@ -184,6 +184,7 @@ After this operation all your data will be lost !
 - Make a cleanup script for the elastic search indexes to keep only for a certain amount of time (curator)
 - Make script to cronjob the bart backup
 - Make a script that test and create the needed user and then set the permissions on it
+- dstat and spy.log from the elk agent are not rotated (FIXME)
 - Test bart script (verify it backup the volumes/config folder)
 - Test the cleanup of the audit log in alfresco database
 - Postgres folder permissions (perhaps 999:1000 works or put 1000 user in postgres group...)
